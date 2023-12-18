@@ -1,0 +1,5 @@
+{
+    "appService.preDeployTask": "publish-release",
+    "appService.deploySubpath": "ThreeAmigos.Products\\bin\\Release\\net7.0\\publish",
+    "appService.defaultWebAppToDeploy": "/subscriptions/2b90a08f-f6f2-479b-b05d-58de384f9c61/resourceGroups/ThreeAmigos/providers/Microsoft.Web/sites/ThreeAmigosService"
+}
