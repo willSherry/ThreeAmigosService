@@ -1,0 +1,64 @@
+﻿@page
+@model IndexModel
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Product Data</title>
+    <!-- Any additional styles or scripts can be included here -->
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Product Data</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Brand</th>
+                <th>Category</th>
+                <th>In Stock</th>
+                <!-- Add other columns for product details -->
+            </tr>
+        </thead>
+        <tbody>
+    @if (Model.Products != null)
+    {
+        @foreach (var product in Model.Products)
+        {
+            <tr>
+                <td>@product.Id</td>
+                <td>@product.Name</td>
+                <td>@product.Price</td>
+                <td>@product.BrandName</td>
+                <td>@product.CategoryName</td>
+                <td>@(product.InStock ? "Yes" : "No")</td>
+                <!-- Add cells for other product details -->
+            </tr>
+        }
+    }
+    else
+    {
+        <tr>
+            <td colspan="6">No products available</td>
+        </tr>
+    }
+</tbody>
+    </table>
+</body>
+</html>
