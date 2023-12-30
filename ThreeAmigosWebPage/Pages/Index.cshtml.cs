@@ -19,16 +19,44 @@ namespace ThreeAmigosWebPage.Pages
 
     public List<ProductDto> Products { get; private set; }
 
-    public async Task OnGetAsync()
+    // public async Task OnGetAsync()
+    // {
+    //     try
+    //     {
+    //         // Fetch product data using ProductService
+    //         Products = await _productService.GetProductDataAsync();
+    //     }
+    //     catch (Exception ex)
+    //     {
+    //         // Handle exception
+    //     }
+    // }
+
+    public async Task OnGetAsync(string search)
     {
-        try
+        try 
         {
-            // Fetch product data using ProductService
-            Products = await _productService.GetProductDataAsync();
+            // Checks that search request isnt empty
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                var products = await _productService.GetProductDataAsync();
+                Products = products.Where(p => 
+                p.Name.ToLower().Contains(search) ||
+                p.Description.ToLower().Contains(search) ||
+                p.CategoryName.ToLower().Contains(search) ||
+                p.BrandName.ToLower().Contains(search)
+                ).ToList();    
+                
+            }
+            else
+            {
+                // Display all products if search is made while search box is empty
+                Products = await _productService.GetProductDataAsync();
+            }
         }
-        catch (Exception ex)
+        catch (Exception e)
         {
-            // Handle exception
+                throw;
         }
     }
 }

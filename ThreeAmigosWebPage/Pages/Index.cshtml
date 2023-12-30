@@ -23,15 +23,22 @@
 </head>
 <body>
     <h1>Product Data</h1>
+    <form method = "get">
+        <input type="text" id="looseSearch" name = "search" placeholder="Search Products..."></input>
+        <input type="submit" value="Search"></input>
+    </form>
 
     <table>
         <thead>
             <tr>
                 <th>ID</th>
                 <th>Name</th>
+                <th>Description</th>
                 <th>Price</th>
                 <th>Brand</th>
+                <th>Brand ID</th>
                 <th>Category</th>
+                <th>Category ID</th>
                 <th>In Stock</th>
                 <!-- Add other columns for product details -->
             </tr>
@@ -44,9 +51,12 @@
             <tr>
                 <td>@product.Id</td>
                 <td>@product.Name</td>
+                <td>@product.Description</td>
                 <td>@product.Price</td>
                 <td>@product.BrandName</td>
+                <td>@product.BrandId</td>
                 <td>@product.CategoryName</td>
+                <td>@product.CategoryId</td>
                 <td>@(product.InStock ? "Yes" : "No")</td>
                 <!-- Add cells for other product details -->
             </tr>
