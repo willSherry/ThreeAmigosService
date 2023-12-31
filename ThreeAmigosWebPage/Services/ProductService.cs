@@ -1,43 +1,59 @@
 using Newtonsoft.Json;
 using ThreeAmigosWebPage.Services;
-
+using ThreeAmigos.Products.Services.UnderCutters;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ThreeAmigosWebPage.Services;
 
-    public class ProductService : IProductService
+    public class ProductService 
 {
-    private readonly HttpClient _httpClient;
 
-    public ProductService(HttpClient httpClient)
+    private readonly IUnderCuttersService _underCuttersService;
+
+    public ProductService(HttpClient httpClient, IUnderCuttersService underCuttersService)
     {
-        _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+        _underCuttersService = underCuttersService;
     }
 
-    public async Task<List<ProductDto>> GetProductDataAsync()
+    public async Task<List<ThreeAmigos.Products.Services.UnderCutters.ProductDto>> GetUnderCuttersProducts()
     {
+        IEnumerable<ThreeAmigos.Products.Services.UnderCutters.ProductDto> products = null;
         try
         {
-            var url = "https://threeamigosservice.azurewebsites.net/debug/undercutters"; // Replace with your actual URL
-
-            HttpResponseMessage response = await _httpClient.GetAsync(url);
-
-            if (response.IsSuccessStatusCode)
-            {
-                string json = await response.Content.ReadAsStringAsync();
-                List<ProductDto> products = JsonConvert.DeserializeObject<List<ProductDto>>(json);
-                return products;
-            }
-            else
-            {
-                // Handle the case when the response is not successful
-                // For simplicity, returning an empty list here
-                return new List<ProductDto>();
-            }
+            products = await _underCuttersService.GetProductsAsync();
         }
-        catch (Exception ex)
+        catch
         {
-            // Handle exceptions (e.g., network issues, timeouts, etc.)
-            throw new Exception("Error fetching product data", ex);
+            products = Array.Empty<ThreeAmigos.Products.Services.UnderCutters.ProductDto>();
         }
+        return products.ToList();
     }
+
+    // public async Task<List<ProductDto>> GetProductDataAsync()
+    // {
+    //     try
+    //     {
+    //         var url = "https://threeamigosservice.azurewebsites.net/debug/undercutters"; // Replace with your actual URL
+
+    //         HttpResponseMessage response = await _httpClient.GetAsync(url);
+
+    //         if (response.IsSuccessStatusCode)
+    //         {
+    //             string json = await response.Content.ReadAsStringAsync();
+    //             List<ProductDto> products = JsonConvert.DeserializeObject<List<ProductDto>>(json);
+    //             return products;
+    //         }
+    //         else
+    //         {
+    //             // Handle the case when the response is not successful
+    //             // For simplicity, returning an empty list here
+    //             return new List<ProductDto>();
+    //         }
+    //     }
+    //     catch (Exception ex)
+    //     {
+    //         // Handle exceptions (e.g., network issues, timeouts, etc.)
+    //         throw new Exception("Error fetching product data", ex);
+    //     }
+    // }
 }

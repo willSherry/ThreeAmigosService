@@ -1,3 +1,6 @@
+using Polly;
+using Polly.Extensions.Http;
+using ThreeAmigos.Products.Services.UnderCutters;
 using ThreeAmigosWebPage.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,7 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 
 // Register ProductService as a transient service
-builder.Services.AddHttpClient<IProductService, ProductService>();
+builder.Services.AddHttpClient<IUnderCuttersService, UnderCuttersService>()
+                    .AddPolicyHandler(GetRetryPolicy());
+
 
 var app = builder.Build();
 
@@ -27,3 +32,12 @@ app.UseAuthorization();
 app.MapRazorPages();
 
 app.Run();
+
+IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
+{
+    return HttpPolicyExtensions
+        .HandleTransientHttpError()
+        .OrResult(msg => msg.StatusCode == System.Net.HttpStatusCode.NotFound)
+        .WaitAndRetryAsync(5, retryAttempt =>
+            TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
+}
