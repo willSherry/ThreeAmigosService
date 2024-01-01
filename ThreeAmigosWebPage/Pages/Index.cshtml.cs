@@ -19,19 +19,6 @@ namespace ThreeAmigosWebPage.Pages
 
     public List<ProductDto> Products { get; private set; }
 
-    // public async Task OnGetAsync()
-    // {
-    //     try
-    //     {
-    //         // Fetch product data using ProductService
-    //         Products = await _productService.GetProductDataAsync();
-    //     }
-    //     catch (Exception ex)
-    //     {
-    //         // Handle exception
-    //     }
-    // }
-
     public async Task OnGetAsync(string search)
     {
         try 

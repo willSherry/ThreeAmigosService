@@ -3,6 +3,15 @@
 
 <!DOCTYPE html>
 <html>
+
+@if (User.Identity.IsAuthenticated)
+{
+    ViewData["Title"] = $"{User.Identity.Name}'s Value Fetch";
+}
+else
+{
+    ViewData["Title"] = "Generic Value Fetch";
+}
 <head>
     <title>Product Data</title>
     <!-- Any additional styles or scripts can be included here -->
