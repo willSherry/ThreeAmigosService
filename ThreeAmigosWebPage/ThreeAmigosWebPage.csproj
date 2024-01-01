@@ -13,8 +13,4 @@
     
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\ThreeAmigos.Products\ThreeAmigos.Products.csproj" />
-  </ItemGroup>
-
 </Project>

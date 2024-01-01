@@ -5,20 +5,19 @@ using Microsoft.Extensions.Logging;
 using System.Net.Http;
 using System;
 using ThreeAmigosWebPage.Services;
-using ThreeAmigos.Products.Services.UnderCutters;
 
 namespace ThreeAmigosWebPage.Pages
 {
     public class IndexModel : PageModel
 {
-    private readonly IUnderCuttersService _underCuttersService;
+    private readonly IProductService _productService;
 
-    public IndexModel(IUnderCuttersService underCuttersService)
+    public IndexModel(IProductService productService)
     {
-        _underCuttersService = underCuttersService;
+        _productService = productService;
     }
 
-    public List<ThreeAmigos.Products.Services.UnderCutters.ProductDto> Products { get; private set; }
+    public List<ProductDto> Products { get; private set; }
 
     public async Task OnGetAsync(string search)
     {
@@ -27,7 +26,7 @@ namespace ThreeAmigosWebPage.Pages
             // Checks that search request isnt empty
             if (!string.IsNullOrWhiteSpace(search))
             {
-                var products = await _underCuttersService.GetProductsAsync();
+                var products = await _productService.GetProductDataAsync();
                 Products = products.Where(p => 
                 p.Name.ToLower().Contains(search) ||
                 p.Description.ToLower().Contains(search) ||
@@ -39,8 +38,7 @@ namespace ThreeAmigosWebPage.Pages
             else
             {
                 // Display all products if search is made while search box is empty
-                var allProducts = await _underCuttersService.GetProductsAsync();
-                Products = allProducts.ToList();
+                Products = await _productService.GetProductDataAsync();
             }
         }
         catch (Exception e)
