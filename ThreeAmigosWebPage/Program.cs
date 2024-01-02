@@ -9,6 +9,7 @@ builder.Services.AddRazorPages();
 
 // Register ProductService as a transient service
 builder.Services.AddHttpClient<IProductService, ProductService>();
+builder.Services.AddTransient<IProductService, ProductService>();
 
 builder.Services.AddAuth0WebAppAuthentication(options => {
     options.Domain = builder.Configuration["Auth:Domain"];

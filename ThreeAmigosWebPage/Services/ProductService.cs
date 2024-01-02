@@ -1,3 +1,5 @@
+using System.Net.Http.Headers;
+using Auth0.AspNetCore.Authentication;
 using Newtonsoft.Json;
 using ThreeAmigosWebPage.Services;
 
@@ -6,38 +8,50 @@ namespace ThreeAmigosWebPage.Services;
 
     public class ProductService : IProductService
 {
-    private readonly HttpClient _httpClient;
 
-    public ProductService(HttpClient httpClient)
+    private readonly IHttpClientFactory _clientFactory;
+    private readonly IConfiguration _configuration;
+
+    public ProductService(IHttpClientFactory clientFactory, 
+                            IConfiguration configuration)
     {
-        _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+        _clientFactory = clientFactory;
+        _configuration = configuration;
+
     }
+    record TokenDto(string access_token, string token_type, int expires_in);
 
     public async Task<List<ProductDto>> GetProductDataAsync()
     {
-        try
-        {
-            var url = "https://threeamigosservice.azurewebsites.net/debug/undercutters"; // Replace with your actual URL
+        var tokenClient = _clientFactory.CreateClient();
 
-            HttpResponseMessage response = await _httpClient.GetAsync(url);
+        //Auth0 Authority
+        var authBaseAddress = _configuration["Auth:Authority"];
+        tokenClient.BaseAddress = new Uri(authBaseAddress);
 
-            if (response.IsSuccessStatusCode)
-            {
-                string json = await response.Content.ReadAsStringAsync();
-                List<ProductDto> products = JsonConvert.DeserializeObject<List<ProductDto>>(json);
-                return products;
-            }
-            else
-            {
-                // Handle the case when the response is not successful
-                // For simplicity, returning an empty list here
-                return new List<ProductDto>();
-            }
-        }
-        catch (Exception ex)
-        {
-            // Handle exceptions (e.g., network issues, timeouts, etc.)
-            throw new Exception("Error fetching product data", ex);
-        }
+        var tokenParams = new Dictionary<string, string> {
+            { "grant_type", "client_credentials" },
+            { "client_id", _configuration["Auth:ClientId"] },
+            { "client_secret", _configuration["Auth:ClientSecret"] },
+            { "audience", _configuration["Auth:Audience"] },
+        };
+        var tokenForm = new FormUrlEncodedContent(tokenParams);
+        var tokenResponse = await tokenClient.PostAsync("/oauth/token", tokenForm);
+        tokenResponse.EnsureSuccessStatusCode();
+        var tokenInfo = await tokenResponse.Content.ReadFromJsonAsync<TokenDto>();
+
+        // FIX: token should be cached and not called every time
+
+        var client = _clientFactory.CreateClient();
+
+        var serviceBaseAddress = _configuration["Services:BaseAddress"];
+        client.BaseAddress = new Uri(serviceBaseAddress);
+        client.DefaultRequestHeaders.Authorization = 
+                    new AuthenticationHeaderValue("Bearer", tokenInfo?.access_token);
+        var response = await client.GetAsync("debug/undercutters");
+        response.EnsureSuccessStatusCode();
+        List<ProductDto> result = await response.Content.ReadAsAsync<List<ProductDto>>();
+        return result;
     }
+
 }
