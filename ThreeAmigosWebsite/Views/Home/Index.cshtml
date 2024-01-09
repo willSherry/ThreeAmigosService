@@ -13,6 +13,13 @@
 
 <h1>@ViewData["Title"]</h1>
 
+<form method="get">
+    <label for="searchQuery">Search:</label>
+    <input type="text" name="searchQuery" />
+    <button type="submit">Search</button>
+</form>
+
+
 <table class="table">
     <thead>
         <tr>
@@ -46,39 +53,52 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BrandName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BrandId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CategoryName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CategoryId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.InStock)
-            </td>
-            <td>
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a>
-            </td>
-        </tr>
+
+@{
+    var searchQuery = Context.Request.Query["searchQuery"].ToString();
 }
+
+@foreach (var item in Model.Where(p =>
+    string.IsNullOrWhiteSpace(searchQuery) ||
+    p.Name.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ||
+    p.Description.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ||
+    p.BrandName.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ||
+    p.CategoryName.Contains(searchQuery, StringComparison.OrdinalIgnoreCase)))
+{
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Id)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Price)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Description)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.BrandName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.BrandId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CategoryName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CategoryId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.InStock)
+        </td>
+        <td>
+            <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+        </td>
+    </tr>
+}
+
+
     </tbody>
 </table>

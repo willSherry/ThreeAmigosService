@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ThreeAmigosWebsite.Models;
 
-namespace SecureWeb.Controllers;
+namespace ThreeAmigosWebsite.Controllers;
 
 public class AccountController : Controller
 {
