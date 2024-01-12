@@ -22,7 +22,7 @@ public class UserService : IUserService
 
     record managementTokenDto(string access_token, string token_type, int expires_in);
 
-    public async Task<IEnumerable<UserProfileViewModel>> GetUserDataAsync(string userEmailAddress)
+    public async Task<string> GetUserDataAsync(string userEmailAddress)
     {
         // getting access token to auth0 management api
 
@@ -51,13 +51,13 @@ public class UserService : IUserService
 
         // getting my users from the api
         var client = new HttpClient();
-        var serviceBaseAddress = _configuration["Services:Products:BaseAddress"];
+        var serviceBaseAddress = _configuration["Auth:Management:Audience"];
         client.BaseAddress = new Uri(serviceBaseAddress);
         client.DefaultRequestHeaders.Authorization = 
                     new AuthenticationHeaderValue("Bearer", token); //token?.access_token maybe?
         var apiResponse = await client.GetAsync($"users-by-email?email={userEmailAddress}");
         apiResponse.EnsureSuccessStatusCode();
-        var result = await apiResponse.Content.ReadAsAsync<IEnumerable<UserProfileViewModel>>();
+        var result = await apiResponse.Content.ReadAsStringAsync();
         return result;
     }
 }

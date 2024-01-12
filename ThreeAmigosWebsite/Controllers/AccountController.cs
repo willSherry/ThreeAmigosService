@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using ThreeAmigosWebsite.Models;
 using ThreeAmigosWebsite.Controllers;
 using ThreeAmigosWebsite.Services;
+using Newtonsoft.Json;
 
 namespace ThreeAmigosWebsite.Controllers;
 
@@ -62,22 +63,39 @@ public class AccountController : Controller
         });
     }
 
+    // [Authorize]
+    // public async Task<IActionResult> UpdateProfile(string userEmail)
+    // {
+    //     userEmail = User.Identity.Name;
+    //     // MAY NOT NEED PARAMETER, GET EMAIL FROM IN HERE? LOOK AT PROFILE ACTION
+    //     if (userEmail == null)
+    //     {
+    //         return BadRequest("STILLLLLL NULL");
+    //     }
+    //     var userId = await _userService.GetUserDataAsync(userEmail);
+    //     Console.WriteLine(userId);
+    //     return RedirectToAction("Index", "Home");
+    // }
     [Authorize]
     public async Task<IActionResult> UpdateProfile(string userEmail)
     {
+        userEmail = User.Identity.Name;
         if (userEmail == null)
         {
-            return BadRequest("STILLLLLL NULL");
+            return BadRequest("Email is null");
         }
-        try
-        {
-            var userId = await _userService.GetUserDataAsync(userEmail);
-        }
-        catch(Exception e)
-        {
-            return BadRequest("ERROR OOPS");
-        }
-        return Ok();
+
+        var userData = await _userService.GetUserDataAsync(userEmail);
+
+        // Deserialize the JSON string into a dynamic object
+        dynamic userObject = JsonConvert.DeserializeObject<List<dynamic>>(userData)[0];
+
+        // Access the 'user_id' property
+        string userId = userObject.user_id;
+
+        Console.WriteLine(userId);
+
+        return RedirectToAction("Index", "Home");
     }
 
     [Authorize]
@@ -85,20 +103,6 @@ public class AccountController : Controller
     {
         return View();
     }
-
-    // [Authorize]
-    // public async Task<IActionResult> UpdateProfile(EditUserProfile model)
-    // {
-    //     try
-    //     {
-    //         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-    //     }   
-    //     catch(Exception e)
-    //     {
-    //         throw e;
-    //     }
-    // }
-
 
     [Authorize]
     public IActionResult Claims()
