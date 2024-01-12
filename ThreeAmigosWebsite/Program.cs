@@ -1,10 +1,17 @@
 using Auth0.AspNetCore.Authentication;
+using Auth0.ManagementApi;
+using Auth0.ManagementApi.Models;
+using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json.Linq;
 using ThreeAmigosWebsite.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddHttpClient<IProductService, ProductService>();
 builder.Services.AddTransient<IProductService, ProductService>();
+
+builder.Services.AddHttpClient<IUserService, UserService>();
+builder.Services.AddTransient<IUserService, UserService>();
 
 builder.Services.AddAuth0WebAppAuthentication(options => {
     options.Domain = builder.Configuration["Auth:Domain"];
