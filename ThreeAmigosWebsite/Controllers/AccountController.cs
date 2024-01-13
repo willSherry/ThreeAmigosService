@@ -23,6 +23,21 @@ public class AccountController : Controller
         _userService = userService;
     }
 
+
+
+    public async Task<dynamic> UserInfo()
+    {
+        var userEmail = User.Identity.Name;
+        if (userEmail == null)
+        {
+            return null;
+        }
+
+        var userData = await _userService.GetUserDataAsync(userEmail);
+        // Deserialize the JSON string into a dynamic object
+        dynamic userObject = JsonConvert.DeserializeObject<List<dynamic>>(userData)[0];
+        return userObject;
+    }
     
     public async Task Login(string returnUrl = "/")
     {
@@ -51,40 +66,30 @@ public class AccountController : Controller
     }
 
     [Authorize]
-    public IActionResult Profile()
+    public async Task<IActionResult> Profile()
     {
+        dynamic userInfo = await UserInfo();
+
+        string userName = userInfo.nickname;
+        string profilePicture = userInfo.picture;
+
         return View(new UserProfileViewModel()
         {
-            Name = User.Identity.Name,
-            EmailAddress = User.Claims
-                .FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value,
-            ProfileImage = User.Claims
-                .FirstOrDefault(c => c.Type == "picture")?.Value
+            Name = userName,
+            EmailAddress = User.Identity.Name,
+            ProfileImage = profilePicture
         });
     }
 
-    // [Authorize]
-    // public async Task<IActionResult> UpdateProfile(string userEmail)
-    // {
-    //     userEmail = User.Identity.Name;
-    //     // MAY NOT NEED PARAMETER, GET EMAIL FROM IN HERE? LOOK AT PROFILE ACTION
-    //     if (userEmail == null)
-    //     {
-    //         return BadRequest("STILLLLLL NULL");
-    //     }
-    //     var userId = await _userService.GetUserDataAsync(userEmail);
-    //     Console.WriteLine(userId);
-    //     return RedirectToAction("Index", "Home");
-    // }
     [Authorize]
-    public async Task<IActionResult> UpdateProfile(string userEmail)
+    public async Task<IActionResult> UpdateProfile(string Name)
     {
-        userEmail = User.Identity.Name;
+        var userEmail = User.Identity.Name;
         if (userEmail == null)
         {
             return BadRequest("Email is null");
         }
-
+        
         var userData = await _userService.GetUserDataAsync(userEmail);
 
         // Deserialize the JSON string into a dynamic object
@@ -92,8 +97,17 @@ public class AccountController : Controller
 
         // Access the 'user_id' property
         string userId = userObject.user_id;
+        string nickname = Name;
+        
+        // IT WORKS, now just to get the string value from the edit page
+        /*
+            what to do, pass all parameters through no matter what, if one is null,
+            set it to be the original value, bosh   
+        */ 
+        
+        
 
-        Console.WriteLine(userId);
+        await _userService.UpdateUserDetails(userId, nickname);
 
         return RedirectToAction("Index", "Home");
     }

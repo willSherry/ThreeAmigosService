@@ -14,8 +14,12 @@
     <form asp-action="UpdateProfile" method="post">
 
         <div class="form-group">
-            <label asp-for="@Model.NewName"></label>
-            <input asp-for="@Model.NewName" class="form-control" />
+            <label asp-for="@Model.Name"></label>
+            <input asp-for="@Model.Name" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.EmailAddress"></label>
+            <input asp-for="@Model.EmailAddress" class="form-control" />
         </div>
         <button type="submit" class="btn btn-primary">Update Profile</button>
     </form>

@@ -1,14 +1,7 @@
 ﻿@model IEnumerable<ThreeAmigosWebsite.Services.ProductDTO>
 
 @{
-    if (User.Identity.IsAuthenticated)
-    {
-        ViewData["Title"] = $"{User.Identity.Name}'s Product Store!";
-    }
-    else
-    {
-        ViewData["Title"] = "Three Amigos Product Store!";
-    }
+    ViewData["Title"] = "Three Amigos Product Store!";
 }
 
 <h1>@ViewData["Title"]</h1>
