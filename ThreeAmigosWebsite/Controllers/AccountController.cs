@@ -89,7 +89,7 @@ public class AccountController : Controller
         {
             return BadRequest("Email is null");
         }
-        
+        // Getting user data
         var userData = await _userService.GetUserDataAsync(userEmail);
 
         // Deserialize the JSON string into a dynamic object
@@ -99,15 +99,32 @@ public class AccountController : Controller
         string userId = userObject.user_id;
         string nickname = Name;
         
-        // IT WORKS, now just to get the string value from the edit page
-        /*
-            what to do, pass all parameters through no matter what, if one is null,
-            set it to be the original value, bosh   
-        */ 
-        
-        
-
         await _userService.UpdateUserDetails(userId, nickname);
+
+        return RedirectToAction("Index", "Home");
+    }
+
+    [Authorize]
+    public async Task<IActionResult> DeleteProfile()
+    {
+        var userEmail = User.Identity.Name;
+        if (userEmail == null)
+        {
+            return BadRequest("Email is null");
+        }
+        // Getting user data
+        var userData = await _userService.GetUserDataAsync(userEmail);
+
+        // Deserialize the JSON string into a dynamic object
+        dynamic userObject = JsonConvert.DeserializeObject<List<dynamic>>(userData)[0];
+
+        // Access the 'user_id' property
+        string userId = userObject.user_id;
+
+        // Deleting the user profile
+        _userService.DeleteUserProfile(userId);
+
+        await Logout();
 
         return RedirectToAction("Index", "Home");
     }

@@ -8,4 +8,6 @@ public interface IUserService
     Task<string> GetUserDataAsync(string userEmailAddress);
 
     Task UpdateUserDetails(string userId, string newName);
+
+    Task DeleteUserProfile(string userId);
 }

@@ -95,4 +95,22 @@ public class UserService : IUserService
         apiResponse.EnsureSuccessStatusCode();
         return;
     }
+
+    public async Task DeleteUserProfile(string userId)
+    {
+        // getting access token to auth0 management api
+        var managementApiToken = await GetManagementApiTokenAsync();
+
+        // setting up connection to the api 
+        var client = new HttpClient();
+        var serviceBaseAddress = _configuration["Auth:Management:Audience"];
+        client.BaseAddress = new Uri(serviceBaseAddress);
+        client.DefaultRequestHeaders.Authorization = 
+                    new AuthenticationHeaderValue("Bearer", managementApiToken); 
+
+        // Deleting the profile
+        var apiResponse = await client.DeleteAsync($"users/{userId}");
+        apiResponse.EnsureSuccessStatusCode();
+        return;
+    }
 }
