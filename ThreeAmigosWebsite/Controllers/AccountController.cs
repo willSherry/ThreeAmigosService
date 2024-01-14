@@ -99,6 +99,19 @@ public class AccountController : Controller
         // Deserialize the JSON string into a dynamic object
         dynamic userObject = JsonConvert.DeserializeObject<List<dynamic>>(userData)[0];
 
+        if(BillingAddress == null)
+        {
+            BillingAddress = userObject.user_metadata.billing_address;
+        }
+        if (PhoneNumber == null)
+        {
+            PhoneNumber = userObject.user_metadata.contact_number;
+        }
+        if (Name == null)
+        {
+            Name = userObject.nickname;
+        } 
+
         // Access the 'user_id' property
         string userId = userObject.user_id;
         string nickname = Name;

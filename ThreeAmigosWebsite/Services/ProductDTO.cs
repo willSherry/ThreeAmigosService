@@ -22,4 +22,9 @@ public class ProductDTO
     public int CategoryId { get; set; }
 
     public bool InStock { get; set; }
+
+    public float PricePlus10Percent 
+    {
+        get { return Price * 1.1f; }
+    }
 }

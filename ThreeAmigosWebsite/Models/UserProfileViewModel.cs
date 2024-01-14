@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace ThreeAmigosWebsite.Models;
 
 public class UserProfileViewModel
@@ -8,7 +10,9 @@ public class UserProfileViewModel
 
     public string ProfileImage { get; set; }
 
+    [Required]
     public string? BillingAddress { get; set; }
 
+    [Required]
     public string? PhoneNumber { get; set; }
 }
