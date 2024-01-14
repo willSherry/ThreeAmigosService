@@ -72,9 +72,26 @@ public class AccountController : Controller
 
         string userName = userInfo.nickname;
         string profilePicture = userInfo.picture;
-        string billingAddress = userInfo.user_metadata.billing_address;
-        string phoneNumber = userInfo.user_metadata.contact_number;
 
+        string billingAddress;
+        try
+        {
+            billingAddress = userInfo.user_metadata.billing_address;
+        }
+        catch(Exception e)
+        {
+            billingAddress = null;
+        }
+        
+        string phoneNumber;
+        try
+        {
+            phoneNumber = userInfo.user_metadata.contact_number;
+        }
+        catch(Exception e)
+        {
+            phoneNumber = null;
+        }
         return View(new UserProfileViewModel()
         {
             Name = userName,
@@ -101,11 +118,25 @@ public class AccountController : Controller
 
         if(BillingAddress == null)
         {
-            BillingAddress = userObject.user_metadata.billing_address;
+            try
+            {
+                BillingAddress = userObject.user_metadata.billing_address;
+            }
+            catch(Exception e)
+            {
+                BillingAddress = null;
+            }
         }
         if (PhoneNumber == null)
         {
-            PhoneNumber = userObject.user_metadata.contact_number;
+            try
+            {
+                PhoneNumber = userObject.user_metadata.contact_number;
+            }
+            catch (Exception e)
+            {
+                PhoneNumber = null;
+            }
         }
         if (Name == null)
         {
