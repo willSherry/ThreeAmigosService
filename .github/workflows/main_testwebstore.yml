@@ -24,8 +24,6 @@ jobs:
 
       - name: dotnet publish
         run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
-      - run: cp -r S:\ThreeAmigosService\ThreeAmigosWebsite\bin\pub ${{env.DOTNET_ROOT}}/myapp/
-
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
@@ -47,7 +45,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: .net-app
-
+      
       - name: Login to Azure
         uses: azure/login@v1
         with:
