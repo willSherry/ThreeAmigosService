@@ -70,7 +70,7 @@ public class UserService : IUserService
         var result = await apiResponse.Content.ReadAsStringAsync();
         return result;
     }
-    public async Task UpdateUserDetails(string userId, string newName)
+    public async Task UpdateUserDetails(string userId, string newName, string billingAddress, string phoneNumber)
     {
         // getting access token to auth0 management api
         var managementApiToken = await GetManagementApiTokenAsync();
@@ -85,7 +85,11 @@ public class UserService : IUserService
         // updating the user details
         var newUserDetails = new 
         {
-            nickname = newName
+            nickname = newName,
+            user_metadata = new {
+                billing_address = billingAddress,
+                contact_number = phoneNumber
+            }
         };
 
         string jsonContent = JsonConvert.SerializeObject(newUserDetails);

@@ -18,6 +18,30 @@
                 <p>
                     <i class="glyphicon glyphicon-envelope"></i> Email: @Model.EmailAddress
                 </p>
+                @if (Model.BillingAddress == null)
+                {
+                    <p>
+                        <i class="glyphicon glyphicon-envelope"></i> Billing Address: Edit profile to add address
+                    </p>    
+                }
+                else
+                {
+                    <p>
+                        <i class="glyphicon glyphicon-envelope"></i> Billing Address: @Model.BillingAddress
+                    </p>
+                }
+                @if (Model.PhoneNumber == null)
+                {
+                    <p>
+                    <i class="glyphicon glyphicon-envelope"></i>Phone Number: Edit profile to add phone number
+                    </p>
+                }
+                else
+                {
+                    <p>
+                        <i class="glyphicon glyphicon-envelope"></i> Phone Number: @Model.PhoneNumber
+                    </p>
+                }
             </div>
         </div>
     </div>

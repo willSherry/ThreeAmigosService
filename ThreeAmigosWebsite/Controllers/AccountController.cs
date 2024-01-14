@@ -72,17 +72,21 @@ public class AccountController : Controller
 
         string userName = userInfo.nickname;
         string profilePicture = userInfo.picture;
+        string billingAddress = userInfo.user_metadata.billing_address;
+        string phoneNumber = userInfo.user_metadata.contact_number;
 
         return View(new UserProfileViewModel()
         {
             Name = userName,
             EmailAddress = User.Identity.Name,
-            ProfileImage = profilePicture
+            ProfileImage = profilePicture,
+            BillingAddress = billingAddress,
+            PhoneNumber = phoneNumber
         });
     }
 
     [Authorize]
-    public async Task<IActionResult> UpdateProfile(string Name)
+    public async Task<IActionResult> UpdateProfile(string Name, string BillingAddress, string PhoneNumber)
     {
         var userEmail = User.Identity.Name;
         if (userEmail == null)
@@ -98,8 +102,10 @@ public class AccountController : Controller
         // Access the 'user_id' property
         string userId = userObject.user_id;
         string nickname = Name;
+        string billingAddress = BillingAddress;
+        string phoneNumber = PhoneNumber;
         
-        await _userService.UpdateUserDetails(userId, nickname);
+        await _userService.UpdateUserDetails(userId, nickname, billingAddress, phoneNumber);
 
         return RedirectToAction("Index", "Home");
     }

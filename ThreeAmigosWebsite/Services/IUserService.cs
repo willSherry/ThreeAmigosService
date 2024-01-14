@@ -7,7 +7,7 @@ public interface IUserService
 {
     Task<string> GetUserDataAsync(string userEmailAddress);
 
-    Task UpdateUserDetails(string userId, string newName);
+    Task UpdateUserDetails(string userId, string newName, string billingAddress, string phoneNumber);
 
     Task DeleteUserProfile(string userId);
 }
