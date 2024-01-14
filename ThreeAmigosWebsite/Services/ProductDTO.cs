@@ -25,6 +25,6 @@ public class ProductDTO
 
     public float PricePlus10Percent 
     {
-        get { return Price * 1.1f; }
+        get { return (float)Math.Round(Price * 1.1f, 2); }
     }
 }

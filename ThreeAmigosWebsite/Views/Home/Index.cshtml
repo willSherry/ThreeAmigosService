@@ -40,9 +40,12 @@
             <th>
                 @Html.DisplayNameFor(model => model.CategoryId)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.InStock)
-            </th>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <th>
+                    @Html.DisplayNameFor(model => model.InStock)
+                </th>
+            }
         </tr>
     </thead>
     <tbody>
@@ -83,9 +86,12 @@
         <td>
             @Html.DisplayFor(modelItem => item.CategoryId)
         </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.InStock)
-        </td>
+        @if (User.Identity.IsAuthenticated)
+        {
+            <td>
+                @Html.DisplayFor(modelItem => item.InStock)
+            </td>
+        }
         <td>
             <a asp-action="Details" asp-route-id="@item.Id">Details</a>
         </td>
