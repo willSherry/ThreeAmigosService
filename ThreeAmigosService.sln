@@ -5,10 +5,6 @@ VisualStudioVersion = 17.5.002.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThreeAmigos.Products", "ThreeAmigos.Products\ThreeAmigos.Products.csproj", "{BA71C597-F47D-4C4C-BE1A-334F302418DF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThreeAmigosServiceTests", "ThreeAmigosServiceTests\ThreeAmigosServiceTests.csproj", "{C79C8C12-88EF-496F-8E4A-4C43D3D9452A}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThreeAmigosWebPage", "ThreeAmigosWebPage\ThreeAmigosWebPage.csproj", "{26420872-E53C-49FF-A11F-CDA0327205E3}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThreeAmigosWebsite", "ThreeAmigosWebsite\ThreeAmigosWebsite.csproj", "{A7DAC589-92C5-4E54-9B11-ECC56DDDCF2F}"
 EndProject
 Global
