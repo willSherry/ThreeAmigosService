@@ -23,8 +23,6 @@ public class AccountController : Controller
         _userService = userService;
     }
 
-
-
     public async Task<dynamic> UserInfo()
     {
         var userEmail = User.Identity.Name;
@@ -73,25 +71,8 @@ public class AccountController : Controller
         string userName = userInfo.nickname;
         string profilePicture = userInfo.picture;
 
-        string billingAddress;
-        try
-        {
-            billingAddress = userInfo.user_metadata.billing_address;
-        }
-        catch(Exception e)
-        {
-            billingAddress = null;
-        }
-        
-        string phoneNumber;
-        try
-        {
-            phoneNumber = userInfo.user_metadata.contact_number;
-        }
-        catch(Exception e)
-        {
-            phoneNumber = null;
-        }
+        string billingAddress = userInfo?.user_metadata?.billing_address;
+        string phoneNumber = userInfo?.user_metadata?.contact_number;
         return View(new UserProfileViewModel()
         {
             Name = userName,
@@ -103,41 +84,14 @@ public class AccountController : Controller
     }
 
     [Authorize]
-    public async Task<IActionResult> UpdateProfile(string Name, string BillingAddress, string PhoneNumber)
+    public async Task<IActionResult> UpdateProfile(string? Name, string? BillingAddress, string? PhoneNumber)
     {
-        var userEmail = User.Identity.Name;
-        if (userEmail == null)
-        {
-            return BadRequest("Email is null");
-        }
-        // Getting user data
-        var userData = await _userService.GetUserDataAsync(userEmail);
+        dynamic userObject = await UserInfo();
 
-        // Deserialize the JSON string into a dynamic object
-        dynamic userObject = JsonConvert.DeserializeObject<List<dynamic>>(userData)[0];
-
-        if(BillingAddress == null)
-        {
-            try
-            {
-                BillingAddress = userObject.user_metadata.billing_address;
-            }
-            catch(Exception e)
-            {
-                BillingAddress = null;
-            }
-        }
-        if (PhoneNumber == null)
-        {
-            try
-            {
-                PhoneNumber = userObject.user_metadata.contact_number;
-            }
-            catch (Exception e)
-            {
-                PhoneNumber = null;
-            }
-        }
+        BillingAddress ??= userObject?.user_metadata?.billing_address;
+        PhoneNumber ??= userObject?.user_metadata?.contact_number;
+        Name ??= userObject?.nickname;
+        
         if (Name == null)
         {
             Name = userObject.nickname;
@@ -157,16 +111,7 @@ public class AccountController : Controller
     [Authorize]
     public async Task<IActionResult> DeleteProfile()
     {
-        var userEmail = User.Identity.Name;
-        if (userEmail == null)
-        {
-            return BadRequest("Email is null");
-        }
-        // Getting user data
-        var userData = await _userService.GetUserDataAsync(userEmail);
-
-        // Deserialize the JSON string into a dynamic object
-        dynamic userObject = JsonConvert.DeserializeObject<List<dynamic>>(userData)[0];
+        dynamic userObject = await UserInfo();
 
         // Access the 'user_id' property
         string userId = userObject.user_id;
