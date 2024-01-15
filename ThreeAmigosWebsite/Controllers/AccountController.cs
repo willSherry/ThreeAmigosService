@@ -71,6 +71,11 @@ public class AccountController : Controller
         string userName = userInfo.nickname;
         string profilePicture = userInfo.picture;
 
+        Random r = new Random();
+        int maxPossibleFunds = 450;
+        double userFunds = r.NextDouble() * maxPossibleFunds;
+        double roundedFunds = (double)Math.Round(userFunds, 2);
+
         string billingAddress = userInfo?.user_metadata?.billing_address;
         string phoneNumber = userInfo?.user_metadata?.contact_number;
         return View(new UserProfileViewModel()
@@ -78,6 +83,7 @@ public class AccountController : Controller
             Name = userName,
             EmailAddress = User.Identity.Name,
             ProfileImage = profilePicture,
+            Funds = roundedFunds,
             BillingAddress = billingAddress,
             PhoneNumber = phoneNumber
         });

@@ -21,6 +21,8 @@ builder.Services.AddAuth0WebAppAuthentication(options => {
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddHostedService<RefreshService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
