@@ -103,7 +103,7 @@ public class AccountController : Controller
             Name = userObject.nickname;
         } 
 
-        // Access the 'user_id' property
+        // getting the user id
         string userId = userObject.user_id;
         string nickname = Name;
         string billingAddress = BillingAddress;
@@ -119,7 +119,7 @@ public class AccountController : Controller
     {
         dynamic userObject = await UserInfo();
 
-        // Access the 'user_id' property
+        // Getting the user id
         string userId = userObject.user_id;
 
         // Deleting the user profile

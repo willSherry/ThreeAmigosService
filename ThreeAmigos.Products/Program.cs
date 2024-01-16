@@ -117,5 +117,3 @@ IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
         .WaitAndRetryAsync(5, retryAttempt =>
             TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
 }
-
-// testing auto azure deploy
